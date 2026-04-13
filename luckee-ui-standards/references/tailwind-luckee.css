@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+/*
+ * ============================================================
+ * Luckee Design System — Tailwind v4 Theme Token Source
+ * ============================================================
+ *
+ * This file is the SINGLE SOURCE OF TRUTH for the Luckee visual
+ * identity. It maps the official Figma design tokens to Tailwind
+ * v4 CSS custom properties.
+ *
+ * HOW TO USE:
+ *   1. Replace the import in src/main.tsx:
+ *        - import './style/tailwind.css';
+ *        + import './style/tailwind-luckee.css';
+ *   2. All components using semantic classes (bg-primary, text-foreground,
+ *      rounded-lg, etc.) will automatically adopt the new design.
+ *   3. No component code changes are needed for the 87% of files
+ *      that already use semantic tokens.
+ *
+ * ROLLBACK:
+ *   Simply revert the import in src/main.tsx to restore the previous theme.
+ *
+ * SOURCE: luckee-ui Figma Make prototype /design-system page
+ * ============================================================
+ */
+
+/* ── 1. Tailwind v4 Theme Aliases ── */
+@theme {
+  /* Core color aliases → consumed by bg-*, text-*, border-* utilities */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* Luckee brand extended colors (for arbitrary use) */
+  --color-luckee-green: #3D5A3E;
+  --color-luckee-cream: #FAF8F4;
+  --color-luckee-green-light: #D9E8DA;
+  --color-luckee-green-dark: #1C2B1D;
+
+  /* Semantic status colors (for direct use via bg-success, text-warning etc.) */
+  --color-success: #059669;
+  --color-success-bg: #ECFDF5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FFFBEB;
+  --color-error: #DC2626;
+  --color-error-bg: #FEF2F2;
+  --color-info: #2563EB;
+  --color-info-bg: #EFF6FF;
+
+  /* Radius tokens — Luckee uses large, organic corners */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  /* Shadow tokens */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.10);
+  --shadow-brand: 0 4px 16px rgba(61,90,62,0.25);
+  --shadow-brand-hover: 0 6px 24px rgba(61,90,62,0.35);
+
+  /* Animation */
+  --animate-border-beam: border-beam 4s infinite linear;
+}
+
+/* ── 2. Dark mode variant ── */
+@custom-variant dark (&:where([data-ad-color-scheme="dark"], [data-ad-color-scheme="dark"] *));
+
+/* ── 3. Light Theme Token Values ── */
+@layer base {
+  :root {
+    /* ========== Luckee Light — Forest Green / Oat Cream ========== */
+
+    /* Surfaces */
+    --background: 40 25% 97%;        /* #FAF8F4 Oat Cream */
+    --foreground: 0 0% 18%;          /* #2D2D2D Neutral 900 */
+
+    --card: 0 0% 100%;               /* #FFFFFF */
+    --card-foreground: 0 0% 18%;     /* #2D2D2D */
+
+    --popover: 0 0% 100%;            /* #FFFFFF */
+    --popover-foreground: 0 0% 18%;  /* #2D2D2D */
+
+    /* Brand Primary — Forest Green */
+    --primary: 122 19% 30%;          /* #3D5A3E */
+    --primary-foreground: 40 25% 97%;/* #FAF8F4 */
+
+    /* Secondary — Light Cream (input bg) */
+    --secondary: 40 20% 95%;         /* #F5F3EF */
+    --secondary-foreground: 122 19% 30%; /* #3D5A3E */
+
+    /* Muted */
+    --muted: 0 0% 94%;               /* #F0F0F0 */
+    --muted-foreground: 0 0% 53%;    /* #888888 */
+
+    /* Accent — Light Green */
+    --accent: 124 28% 88%;           /* #D9E8DA */
+    --accent-foreground: 124 21% 14%;/* #1C2B1D */
+
+    /* Destructive */
+    --destructive: 0 72% 51%;        /* #DC2626 */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+
+    /* Borders & Input */
+    --border: 0 0% 90%;              /* approx rgba(0,0,0,0.07) */
+    --input: 0 0% 88%;               /* approx rgba(0,0,0,0.08) */
+    --ring: 122 19% 30%;             /* #3D5A3E — matches primary */
+
+    /* Base radius for components */
+    --radius: 16px;
+
+    /* Typography scale */
+    --text-h1: 2.2rem;
+    --text-h2: 1.8rem;
+    --text-h3: 1.3rem;
+    --text-h4: 1rem;
+    --text-base: 0.88rem;
+    --text-label: 0.78rem;
+    --text-button: 0.82rem;
+
+    /* Font weights */
+    --font-weight-regular: 300;
+    --font-weight-medium: 400;
+    --font-weight-semibold: 500;
+    --font-weight-bold: 500;
+
+    /* Elevation */
+    --elevation-sm: 0 4px 24px rgba(0,0,0,0.06);
+  }
+
+  /* ========== Luckee Dark — Dark Forest ========== */
+  [data-ad-color-scheme="dark"] {
+    --background: 124 15% 8%;        /* Dark forest bg */
+    --foreground: 40 15% 92%;        /* Light cream text */
+
+    --card: 124 12% 12%;
+    --card-foreground: 40 15% 92%;
+
+    --popover: 124 12% 10%;
+    --popover-foreground: 40 15% 92%;
+
+    --primary: 122 30% 50%;          /* Brighter green for dark bg */
+    --primary-foreground: 124 15% 8%;
+
+    --secondary: 124 10% 16%;
+    --secondary-foreground: 40 15% 85%;
+
+    --muted: 124 8% 15%;
+    --muted-foreground: 0 0% 55%;
+
+    --accent: 124 15% 20%;
+    --accent-foreground: 40 15% 92%;
+
+    --destructive: 0 62% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 124 10% 18%;
+    --input: 124 10% 18%;
+    --ring: 122 30% 50%;
+
+    --elevation-sm: 0 4px 24px rgba(0,0,0,0.3);
+  }
+}
+
+/* ── 4. Keyframes ── */
+@keyframes border-beam {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+
+/* ── 5. Global Base Styles ── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-weight: 300;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+  }
+
+  h1 { font-size: var(--text-h1); line-height: 1.3; }
+  h2 { font-size: var(--text-h2); line-height: 1.3; }
+  h3 { font-size: var(--text-h3); line-height: 1.3; }
+  h4 { font-size: var(--text-h4); line-height: 1.5; font-weight: var(--font-weight-semibold); }
+  p  { font-size: var(--text-base); line-height: 1.6; }
+  label { font-size: var(--text-label); }
+  button { font-size: var(--text-button); font-weight: var(--font-weight-medium); }
+  input, textarea { font-size: var(--text-base); font-weight: var(--font-weight-regular); }
+}
+
+/* ── 6. Utility Extensions ── */
+@layer utilities {
+  .flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Luckee glassmorphism */
+  .glass {
+    @apply backdrop-blur-xl;
+    background: rgba(255,255,255,0.65);
+    border: 1px solid rgba(255,255,255,0.5);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  }
+
+  .dark .glass {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+}
