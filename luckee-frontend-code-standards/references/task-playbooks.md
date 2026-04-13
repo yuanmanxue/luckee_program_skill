@@ -28,9 +28,9 @@ For progressive rendering, prefer append-only or patch-safe state transitions. P
 
 ## Integrate an API
 
-Use the runtime API resolver from `src/config/apiConfig.ts`. Prefer path-based definitions and centralized URL building over ad hoc string concatenation. If a task introduces a new endpoint family, update service-path mapping only when necessary and keep the pattern ordering compatible with existing priorities.
+Use `fetchApi` or `fetchEventStream` from `src/request`. Do NOT use raw `fetch` or `axios` directly. Define new endpoints in `src/services/` using the `METHOD@PATH` format. The runtime API resolver from `src/config/apiConfig.ts` will automatically match the correct service domain based on the path prefix.
 
-If the surrounding module already wraps a request in React Query, extend the query/mutation pattern rather than mixing in a different fetching approach.
+If the surrounding module already wraps a request in React Query (`useQuery` / `useMutation`), extend that pattern rather than mixing in a different fetching approach. See `references/api-and-data-fetching.md` for details.
 
 ## Modify State Management
 
@@ -46,9 +46,19 @@ If a design requires non-trivial custom visuals, first check whether the effect 
 
 ## Handle Errors and Empty States
 
-Surface actionable issues through the toast system or existing inline empty/error components. Keep transport failures, parse failures, and permission failures distinguishable. In agent rendering flows, separate **transport success but render fallback** from **true request failure**.
+Surface actionable issues through the global toast system (`toast.success`, `toast.error`, etc. from `src/hooks/use-toast.ts`). Never use `alert()`. 
 
-This distinction is critical for black-box LLM output: the UI should still show something useful when parsing fails.
+Catch and handle `ApiError` specifically when making requests. For lazy-loaded route components, MUST wrap them in `src/components/base/ErrorBoundary` to gracefully handle `ChunkLoadError` when the app updates.
+
+Keep transport failures, parse failures, and permission failures distinguishable. In agent rendering flows, separate **transport success but render fallback** from **true request failure**. See `references/error-handling-and-feedback.md` for details.
+
+## Handle i18n and Text
+
+NEVER hardcode Chinese or English strings directly in components. 
+1. Define the translation keys in both `src/locales/zh/` and `src/locales/en/` files.
+2. Inside React components, use `const t = useT('namespace');` and render with `{t('key')}`.
+3. Outside React components, use the static `t('namespace', 'key')` function.
+See `references/i18n-standards.md` for details.
 
 ## Preferred Change Strategy for AI Agents
 
@@ -70,7 +80,8 @@ Before finishing, verify the following.
 | --- | --- |
 | Architecture | No Next.js-only patterns, no new global state library, no hardcoded service domain |
 | UI | Tailwind + local components remain the default path |
-| Data | Runtime API resolution and current thread/storage semantics are preserved |
-| Robustness | Unknown or malformed backend data still renders with a fallback |
+| Data | `fetchApi` is used, and current thread/storage semantics are preserved |
+| i18n | No hardcoded Chinese strings; `useT` or `t` is used for all user-visible text |
+| Robustness | `ErrorBoundary` is used for lazy components; fallback UI exists for malformed backend data |
 | Validation | Formatting/linting has been run at least on touched files |
 | Summary | Final note explains extension points, conventions preserved, and remaining follow-up |

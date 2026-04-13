@@ -15,8 +15,8 @@ Before making any non-trivial change, read `references/project-context.md`. If t
 
 Follow this order unless the task is trivial.
 
-1. **Identify the change category.** Decide whether the task belongs to page routing, shared UI primitives, business components, store logic, chat/agent rendering, or API/runtime integration.
-2. **Inspect the nearest existing implementation.** Reuse surrounding patterns before inventing a new abstraction.
+1. **Identify the change category.** Decide whether the task belongs to page routing, shared UI primitives, business components, store logic, chat/agent rendering, API/runtime integration, or i18n translation.
+2. **Inspect the nearest existing implementation.** Reuse surrounding patterns before inventing a new abstraction. If creating new files, ALWAYS start from the provided `templates/` directory.
 3. **Preserve the project contract.** Keep Rsbuild, React Router, Zustand, React Query, Tailwind tokens, and runtime service resolution intact.
 4. **Implement the smallest coherent change.** Prefer extension over rewrite.
 5. **Run focused validation.** At minimum, run formatting/lint checks on touched files. Run broader checks when the change crosses modules.
@@ -34,8 +34,9 @@ Follow this order unless the task is trivial.
 | Icons | Use `lucide-react` unless the repository already uses an inline SVG for a special case. |
 | State | Use **Zustand** for app/domain state and **React Query** for server-state caching. Do not introduce a second global state library. |
 | Routing | Define pages in `src/pages`, wire routes in `src/pages/router.tsx`, and keep lazy-loading/auth guard patterns consistent. |
-| Network | Do **not** hardcode service base URLs. Use the runtime service resolution utilities when building HTTP or WS integrations. |
-| Feedback | Surface user-visible success/error states through the existing toast/snackbar flow instead of `alert()`. |
+| Network | Do **not** hardcode service base URLs. MUST use `fetchApi` or `fetchEventStream` from `src/request`. |
+| Feedback | Surface user-visible success/error states through the existing toast/snackbar flow (`toast.success()`, etc.) instead of `alert()`. MUST handle `ChunkLoadError` via `ErrorBoundary`. |
+| i18n | NEVER hardcode Chinese strings. MUST use `useT` hook in components or `t` function elsewhere, and update `src/locales` files. |
 | Dependencies | Avoid adding new dependencies unless the task cannot be solved with the current stack. |
 
 ## Implementation Rules by Area
@@ -92,6 +93,10 @@ If a full-repo lint is too expensive for a tiny change, at least run a focused B
 | --- | --- |
 | `references/project-context.md` | Need repository overview, stack, directory conventions, dependencies, and architectural constraints. |
 | `references/task-playbooks.md` | Need concrete implementation guidance for routes, chat UI, streaming, API integration, stores, and styling decisions. |
+| `references/api-and-data-fetching.md` | Need to call APIs, define new API routes, or handle Server-Sent Events (SSE). |
+| `references/i18n-standards.md` | Need to add user-visible text, translate strings, or handle multi-language switching. |
+| `references/error-handling-and-feedback.md` | Need to show toast notifications, handle API errors, or implement `ErrorBoundary` for lazy-loaded components. |
+| `templates/` | Need to create a new page (`page.tsx`), UI component (`ui-component.tsx`), or Zustand store (`store.ts`). |
 
 ## Avoid These Mistakes
 
