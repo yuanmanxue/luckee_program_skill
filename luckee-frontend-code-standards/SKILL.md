@@ -1,6 +1,6 @@
 ---
 name: luckee-frontend-code-standards
-description: AI coding standards for the motse-ai/luckee_frontend repository. Use for: reading, modifying, or generating code in this Rsbuild + React + TypeScript frontend, especially chat pages, agent rendering, routing, Zustand stores, API integration, Tailwind UI, and project-specific architecture decisions.
+description: "AI coding standards for the motse-ai/luckee_frontend repository. Use for reading, modifying, or generating code in this Rsbuild + React + TypeScript frontend, especially chat pages, agent rendering, routing, Zustand stores, API integration, Tailwind UI, and project-specific architecture decisions."
 ---
 
 # Luckee Frontend Code Standards
