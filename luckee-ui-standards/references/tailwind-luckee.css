@@ -90,13 +90,10 @@
   --animate-border-beam: border-beam 4s infinite linear;
 }
 
-/* ── 2. Dark mode variant ── */
-@custom-variant dark (&:where([data-ad-color-scheme="dark"], [data-ad-color-scheme="dark"] *));
-
-/* ── 3. Light Theme Token Values ── */
+/* ── 2. Theme Token Values (Light Only) ── */
 @layer base {
   :root {
-    /* ========== Luckee Light — Forest Green / Oat Cream ========== */
+    /* ========== Luckee — Forest Green / Oat Cream ========== */
 
     /* Surfaces */
     --background: 40 25% 97%;        /* #FAF8F4 Oat Cream */
@@ -154,48 +151,15 @@
     /* Elevation */
     --elevation-sm: 0 4px 24px rgba(0,0,0,0.06);
   }
-
-  /* ========== Luckee Dark — Dark Forest ========== */
-  [data-ad-color-scheme="dark"] {
-    --background: 124 15% 8%;        /* Dark forest bg */
-    --foreground: 40 15% 92%;        /* Light cream text */
-
-    --card: 124 12% 12%;
-    --card-foreground: 40 15% 92%;
-
-    --popover: 124 12% 10%;
-    --popover-foreground: 40 15% 92%;
-
-    --primary: 122 30% 50%;          /* Brighter green for dark bg */
-    --primary-foreground: 124 15% 8%;
-
-    --secondary: 124 10% 16%;
-    --secondary-foreground: 40 15% 85%;
-
-    --muted: 124 8% 15%;
-    --muted-foreground: 0 0% 55%;
-
-    --accent: 124 15% 20%;
-    --accent-foreground: 40 15% 92%;
-
-    --destructive: 0 62% 55%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 124 10% 18%;
-    --input: 124 10% 18%;
-    --ring: 122 30% 50%;
-
-    --elevation-sm: 0 4px 24px rgba(0,0,0,0.3);
-  }
 }
 
-/* ── 4. Keyframes ── */
+/* ── 3. Keyframes ── */
 @keyframes border-beam {
   0% { offset-distance: 0%; }
   100% { offset-distance: 100%; }
 }
 
-/* ── 5. Global Base Styles ── */
+/* ── 4. Global Base Styles ── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -222,7 +186,7 @@
   input, textarea { font-size: var(--text-base); font-weight: var(--font-weight-regular); }
 }
 
-/* ── 6. Utility Extensions ── */
+/* ── 5. Utility Extensions ── */
 @layer utilities {
   .flex-center {
     display: flex;
@@ -236,10 +200,5 @@
     background: rgba(255,255,255,0.65);
     border: 1px solid rgba(255,255,255,0.5);
     box-shadow: 0 8px 40px rgba(0,0,0,0.08);
-  }
-
-  .dark .glass {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.08);
   }
 }

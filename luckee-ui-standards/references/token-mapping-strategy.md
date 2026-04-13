@@ -51,13 +51,7 @@ The design system requires much larger border radii than the current `6px` defau
 
 *Note: Buttons in the design system are fully rounded (`9999px`). The `Button` component in `src/components/ui/button.tsx` should be updated to use `rounded-full` instead of `rounded-[var(--radius)]`.*
 
-## 3. Dark Mode Strategy
-
-The Figma design system currently lacks a defined Dark Mode. However, the frontend project uses `data-ad-color-scheme="dark"` to toggle themes.
-
-**Recommendation:** Do not remove the dark mode selector. Instead, generate a "Dark Forest" palette that inverses the lightness of the Oat Cream and Forest Green colors, ensuring the app doesn't break when users switch themes.
-
-## 4. Migration Execution Plan (Minimizing Risk)
+## 3. Migration Execution Plan (Minimizing Risk)
 
 If you ask the AI to "apply the Luckee design system", use the following step-by-step prompt strategy to ensure minimal disruption:
 

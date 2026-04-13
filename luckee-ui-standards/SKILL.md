@@ -61,8 +61,8 @@ A ready-to-use theme file is provided at `references/tailwind-luckee.css`. To ap
 
 | Reference | Contents |
 | --- | --- |
-| `references/tailwind-luckee.css` | **Ready-to-use** Tailwind v4 theme file with all Luckee tokens mapped to HSL CSS variables, including light and dark mode. |
-| `references/token-mapping-strategy.md` | Detailed HEX→HSL conversion table, radius mapping, dark mode strategy, and 4-step migration execution plan. |
+| `references/tailwind-luckee.css` | **Ready-to-use** Tailwind v4 theme file with all Luckee tokens mapped to HSL CSS variables (light mode only). |
+| `references/token-mapping-strategy.md` | Detailed HEX→HSL conversion table, radius mapping, and 4-step migration execution plan. |
 | `references/typography-and-colors.md` | Full type scale (Display→Eyebrow), 50-900 shade palettes for Forest Green, Oat, Neutral, and Semantic colors. |
 | `references/layout-and-surfaces.md` | 8px spacing grid, border radius mapping, 4-level shadow system, 3 card surface styles (Flat, Elevated, Glass). |
 | `references/components-form-and-button.md` | Button variants (Primary/Secondary/Ghost/Danger) × 3 sizes × 4 states. Input state matrix (6 states with exact CSS). |
@@ -80,7 +80,6 @@ After applying the theme, verify these critical checkpoints:
 | Body font | Inspect any `<p>` | `Montserrat` weight 300 |
 | Card corners | Inspect any card | `border-radius: 20px` |
 | Button corners | Inspect any button | `border-radius: 9999px` |
-| Dark mode | Toggle theme | Dark Forest palette, no broken colors |
 | Focus ring | Tab to any input | Green ring `rgba(61,90,62,0.08)` |
 
 ## Known Migration Hotspots
