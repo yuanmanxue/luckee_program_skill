@@ -67,6 +67,7 @@ A ready-to-use theme file is provided at `references/tailwind-luckee.css`. To ap
 | `references/layout-and-surfaces.md` | 8px spacing grid, border radius mapping, 4-level shadow system, 3 card surface styles (Flat, Elevated, Glass). |
 | `references/components-form-and-button.md` | Button variants (Primary/Secondary/Ghost/Danger) × 3 sizes × 4 states. Input state matrix (6 states with exact CSS). |
 | `references/components-feedback.md` | Modal anatomy, 4 Toast variants, Notification cards, Progress indicators. |
+| `references/prompt.md` | Chinese usage guide with current `luckee_frontend` scenarios and ready-to-copy Claude prompts. |
 
 ## Testing & Validation Checklist
 

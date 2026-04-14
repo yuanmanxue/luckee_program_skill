@@ -96,6 +96,7 @@ If a full-repo lint is too expensive for a tiny change, at least run a focused B
 | `references/api-and-data-fetching.md` | Need to call APIs, define new API routes, or handle Server-Sent Events (SSE). |
 | `references/i18n-standards.md` | Need to add user-visible text, translate strings, or handle multi-language switching. |
 | `references/error-handling-and-feedback.md` | Need to show toast notifications, handle API errors, or implement `ErrorBoundary` for lazy-loaded components. |
+| `references/prompt.md` | Need Chinese usage instructions and ready-to-copy Claude prompts tailored to the current `luckee_frontend` codebase. |
 | `templates/` | Need to create a new page (`page.tsx`), UI component (`ui-component.tsx`), or Zustand store (`store.ts`). |
 
 ## Avoid These Mistakes
