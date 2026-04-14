@@ -165,6 +165,7 @@ Prefer small commits after each stable step.
 | `references/governance-playbook.md` | Need the full step-by-step migration order and target file hotspots |
 | `references/inline-style-policy.md` | Need to judge whether an inline style should stay or be refactored |
 | `references/prompt-templates.md` | Need reusable prompts for Claude or another coding agent |
+| `references/usage-guide.md` | Need Chinese usage instructions, application scenarios, and ready-to-copy prompt demos for `luckee_frontend` |
 
 ## Avoid These Mistakes
 
