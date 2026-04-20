@@ -1,82 +1,264 @@
 ---
 name: luckee-block-output-contracts
-description: "Luckee 项目 Block Schema 输出契约。定义所有 LLM 可输出的 ContentBlock 类型的 JSON 格式规范、字段约束、兜底规则和 Skill 联动方式。当 Skill 需要输出结构化 UI 组件（如建议清单、商品网格、分析表格等）时，必须读取本 skill 中对应的 block 规范。"
+description: 当需要输出 Luckee 前端可直接渲染的结构化 Block（rufus_suggest_checklist、product_grid、analytics_table、table 等）时使用。必须严格遵守 Block Schema 契约，输出 ContentBlock JSON。普通聊天、非结构化回答、纯文本说明不要使用此 Skill。
+version: "1.0"
 ---
 
 # Luckee Block Output Contracts
 
-## 概述
-
-本 skill 定义 Luckee 前端 Block Schema 体系中，所有 LLM 可产出的 `ContentBlock` 类型的**输出契约**。
-
-**核心原则：Schema 是协议，Renderer 是执行者，LLM 是生产者。**
-
-LLM 输出的 JSON 必须符合对应 block 的 schema 契约，前端才能正确渲染。
-不符合契约的输出会触发兜底渲染（FallbackRenderer），用户体验降级。
+> Schema 是协议，Renderer 是执行者，你是生产者。
 
 ---
 
-## 使用方式
+## When to use
 
-当你（Skill）需要输出某种结构化 UI 时：
+使用此 Skill 当且仅当你的回答需要输出**前端可直接渲染的结构化 UI 组件**：
 
-1. 在下方"已注册 Block 目录"中找到对应的 block type
-2. 读取对应的 `references/` 文件，了解完整的字段规范
-3. 按规范输出 JSON，嵌入到消息的 `structured_blocks` 字段中
+- 需要用户逐条确认的修改建议 → `rufus_suggest_checklist`
+- 需要展示商品列表/网格 → `product_grid`
+- 需要展示带维度/指标的分析数据 → `analytics_table`
+- 需要展示通用表格 → `table`
+- 需要展示图文画廊 → `image_gallery`
+
+### 选型决策树
 
 ```
-消息结构示例：
+需要用户交互（勾选/确认/填写）？
+  ├── 修改建议类 → rufus_suggest_checklist
+  ├── 问卷类     → feedback
+  └── 否，纯展示 ↓
+展示商品数据（有图片/价格/评分）？ → product_grid
+展示表格（有维度/指标/占比）？     → analytics_table
+展示普通表格？                     → table
+展示文字内容？                     → markdown（不需要此 Skill）
+```
+
+---
+
+## Prohibited
+
+以下情况**禁止**使用此 Skill：
+
+1. 普通对话、闲聊、问答 — 直接用文本回复
+2. 纯 Markdown 内容（分析报告、说明文字）— 直接输出 markdown，不需要 block
+3. 建议项为 0 条时 — 不输出 block，用文本说明"未发现需要修改的项"
+4. 不确定该用哪种 block — 先用文本回复，不要猜测 block type
+
+**绝对禁止**：
+- 输出未注册的 block type（前端会触发 FallbackRenderer）
+- 在 block 字段中嵌入 HTML / JavaScript / Markdown 链接
+- 把 `risk` 等枚举字段写成中文
+- 在一条消息中输出多个同类型 block
+- 输出 `items: []` 空数组
+
+---
+
+## Step-by-step Workflow
+
+### Step 1: 判断是否需要 block
+
+如果你的回答只是文字说明、分析报告、或普通对话 → **不使用此 Skill，直接回复文本**。
+
+### Step 2: 选择 block type
+
+根据上方决策树选择正确的 block type。如果不确定，不要输出 block。
+
+### Step 3: 读取对应的 block 规范（JiT）
+
+根据选定的 block type，**立刻读取**对应的 references 文件：
+
+| Block type | 必须读取 |
+|---|---|
+| `rufus_suggest_checklist` | `references/rufus-suggest-checklist.md` |
+| `product_grid` | `references/field-registry.json` + *(规范待补充)* |
+| `analytics_table` | *(规范待补充)* |
+| `table` | *(规范待补充)* |
+
+同时读取通用规则：`references/output-contract-rules.md`
+
+### Step 4: 构造 block JSON
+
+严格按照规范文件中的字段表构造 JSON。必须包含三个基础字段：
+
+```json
 {
-  "content": "这是普通文本说明...",
+  "type": "<block_type>",
+  "version": "1.0",
+  "source": "llm_output"
+}
+```
+
+### Step 5: 嵌入消息
+
+将 block JSON 放入 `metadata.structured_blocks` 数组：
+
+```json
+{
+  "content": "分析完成，以下是修改建议：",
   "metadata": {
     "structured_blocks": [
-      { "type": "rufus_suggest_checklist", "version": "1.0", ... }
+      { "type": "rufus_suggest_checklist", "version": "1.0", "source": "llm_output", ... }
     ]
   }
 }
 ```
 
----
+### Step 6: 自检
 
-## 已注册 Block 目录
-
-| Block type | 组件名 | 用途 | 规范文件 |
-|---|---|---|---|
-| `rufus_suggest_checklist` | `RufusSuggestCheckList` | Rufus 输出的逐条修改建议清单，用户可勾选确认 | `references/rufus-suggest-checklist.md` |
-| `product_grid` | `ProductGridRenderer` | 商品网格，支持卡片/表格视图 | *(待补充)* |
-| `analytics_table` | `AnalyticsTableRenderer` | 带角色注解的分析表格 | *(待补充)* |
-| `table` | `TableRenderer` | 通用表格 | *(待补充)* |
-| `markdown` | `MarkdownRenderer` | Markdown 文本 | *(待补充)* |
-| `image_gallery` | `ImageGalleryRenderer` | 图文画廊 | *(待补充)* |
+输出前检查：
+- [ ] `type` 拼写正确？
+- [ ] `version` 是 `"1.0"`？
+- [ ] `source` 是 `"llm_output"`？
+- [ ] 必填字段全部存在？
+- [ ] 枚举值用英文？
+- [ ] 数组不为空？
+- [ ] 字段名用 camelCase？
 
 ---
 
-## 通用输出规则
+## Output Format
 
-所有 block 都必须遵守以下基础规则，详见 `references/output-contract-rules.md`：
+### 消息结构
 
-1. 必须包含 `type`、`version`、`source` 三个基础字段
-2. `source` 固定为 `"llm_output"`
-3. `version` 固定为当前版本（见各 block 规范）
-4. 不要在 `structured_blocks` 中混入不同语义的 block（如把建议清单和商品网格放在同一条消息）
-5. 输出 block 时，消息的 `content` 字段可以为空字符串，也可以包含对 block 的文字说明
+```json
+{
+  "content": "<可选的文字说明>",
+  "metadata": {
+    "structured_blocks": [
+      <ContentBlock JSON>
+    ]
+  }
+}
+```
+
+### BaseBlock 必填字段
+
+所有 block 都必须包含：
+
+| 字段 | 值 | 说明 |
+|---|---|---|
+| `type` | 见注册表 | block 类型标识 |
+| `version` | `"1.0"` | 当前固定值 |
+| `source` | `"llm_output"` | 固定值 |
+
+### 已注册 Block 类型
+
+| type | 组件名 | 用途 |
+|---|---|---|
+| `rufus_suggest_checklist` | RufusSuggestCheckList | 逐条修改建议清单，用户可勾选确认 |
+| `product_grid` | ProductGridRenderer | 商品网格/卡片 |
+| `analytics_table` | AnalyticsTableRenderer | 带角色注解的分析表格 |
+| `table` | TableRenderer | 通用表格 |
+| `markdown` | MarkdownRenderer | Markdown 富文本 |
+| `image_gallery` | ImageGalleryRenderer | 图文画廊 |
 
 ---
 
-## 扩展方式
+## JiT References
 
-新增 block type 时：
+按需读取，不要一次性全部加载：
 
-1. 在 `src/lib/blocks/types.ts` 中定义新的 interface
-2. 在 `src/components/blocks/` 中实现 Renderer 组件
-3. 在本 skill 的 `references/` 目录下新增对应的规范文件
-4. 在上方"已注册 Block 目录"表格中补充条目
+| 文件 | 何时读取 |
+|---|---|
+| `references/rufus-suggest-checklist.md` | 需要输出修改建议清单时 |
+| `references/output-contract-rules.md` | 任何 block 输出前（通用规则） |
+| `references/block-schema-overview.md` | 不确定选哪种 block type 时 |
+| `references/field-registry.json` | 需要输出 product_grid 或理解字段体系时 |
 
 ---
 
-## 参考文档
+## Examples
 
-- `references/output-contract-rules.md` — 通用输出契约规则
-- `references/rufus-suggest-checklist.md` — rufus_suggest_checklist 完整规范
-- `docs/Block Schema 统一渲染架构设计方案.md` — 前端 Block Schema 体系总设计
-- `src/lib/blocks/types.ts` — TypeScript 类型定义（权威来源）
+### Good Example: rufus_suggest_checklist
+
+场景：Rufus 分析完 Listing 后，发现标题和搜索词需要优化。
+
+```json
+{
+  "content": "分析完成，发现 2 处可优化项：",
+  "metadata": {
+    "structured_blocks": [
+      {
+        "type": "rufus_suggest_checklist",
+        "version": "1.0",
+        "source": "llm_output",
+        "title": "Rufus 建议修改清单",
+        "description": "以下建议已按字段整理，确认后将自动应用。",
+        "items": [
+          {
+            "id": "1",
+            "field": "标题",
+            "risk": "medium",
+            "description": "核心成交词靠后，前半段缺少高意图词。",
+            "warning": "会直接影响前台标题展示。",
+            "currentContent": "Wireless Earbuds Bluetooth Headphones for Sports",
+            "suggestedContent": "Wireless Earbuds with Noise Cancelling, 48H Battery for Gym"
+          },
+          {
+            "id": "2",
+            "field": "Search Terms",
+            "risk": "low",
+            "description": "后台词重复度高，缺少购买意图变体词。",
+            "currentContent": "wireless earbuds bluetooth headphones",
+            "suggestedContent": "noise cancelling earbuds workout headphones long battery"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**为什么好**：type/version/source 正确，risk 用英文枚举，items 非空，字段完整，camelCase 命名。
+
+### Bad Example: 常见错误
+
+```json
+{
+  "content": "",
+  "metadata": {
+    "structured_blocks": [
+      {
+        "type": "rufus_checklist",
+        "version": "1.0",
+        "source": "llm_output",
+        "items": [
+          {
+            "id": 1,
+            "field": "标题",
+            "risk": "高风险",
+            "description": "标题需要修改",
+            "current_content": "...",
+            "suggested_content": ""
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**错误清单**：
+1. `type` 拼写错误（`rufus_checklist` → 应为 `rufus_suggest_checklist`）
+2. `id` 是数字（应为字符串 `"1"`）
+3. `risk` 用了中文（`"高风险"` → 应为 `"high"`）
+4. 字段名用 snake_case（`current_content` → 应为 `currentContent`）
+5. `suggestedContent` 为空字符串（禁止）
+6. `description` 过于笼统，没有说明具体原因
+
+---
+
+## Fallback Behavior
+
+前端有三级防御，即使你输出有小偏差也不会崩溃，但会降级：
+
+| 你的输出 | 前端行为 |
+|---|---|
+| 完全符合规范 | 正常渲染对应组件 |
+| risk 写成中文 | 容错修复，仍可渲染 |
+| snake_case 字段名 | 容错修复，仍可渲染 |
+| type 拼写错误 | **FallbackRenderer**（用户看到异常） |
+| items 为空 | **FallbackRenderer**（用户看到异常） |
+| 缺少 type 字段 | **FallbackRenderer**（用户看到异常） |
+
+**目标：永远不触发 FallbackRenderer。**

@@ -1,0 +1,161 @@
+{
+  "$schema": "field-registry/v1",
+  "description": "Luckee FIELD_REGISTRY 的 JSON 映射。LLM 在输出 product_grid 等需要字段映射的 block 时参考此文件，了解合法的字段 key、别名和值类型。",
+  "fields": [
+    {
+      "key": "title",
+      "label": "商品标题",
+      "valueType": "string",
+      "group": "identity",
+      "detectionWeight": 8,
+      "aliases": ["标题", "商品标题", "名称", "product title", "title", "listing", "product name", "item name", "商品名称", "产品标题", "产品名称"],
+      "defaultVisible": true,
+      "renderPriority": 1
+    },
+    {
+      "key": "asin",
+      "label": "ASIN",
+      "valueType": "string",
+      "group": "identity",
+      "detectionWeight": 10,
+      "aliases": ["ASIN", "asin", "Amazon ASIN", "parent asin", "child asin", "父ASIN", "子ASIN"],
+      "defaultVisible": true,
+      "renderPriority": 2
+    },
+    {
+      "key": "image",
+      "label": "主图",
+      "valueType": "image_url",
+      "group": "identity",
+      "detectionWeight": 7,
+      "aliases": ["主图", "图片", "商品图", "image", "main image", "product image", "photo", "图片链接", "商品图片", "产品图片", "产品主图"],
+      "defaultVisible": true,
+      "renderPriority": 0
+    },
+    {
+      "key": "price",
+      "label": "价格",
+      "valueType": "price",
+      "group": "commerce",
+      "detectionWeight": 6,
+      "aliases": ["价格", "售价", "price", "sale price", "current price", "list price", "定价", "销售价", "当前价格"],
+      "defaultVisible": true,
+      "renderPriority": 3
+    },
+    {
+      "key": "rating",
+      "label": "评分",
+      "valueType": "rating",
+      "group": "metric",
+      "detectionWeight": 5,
+      "aliases": ["评分", "星级", "rating", "star rating", "stars", "average rating", "评级", "平均评分"],
+      "defaultVisible": true,
+      "renderPriority": 4
+    },
+    {
+      "key": "reviews",
+      "label": "评论数",
+      "valueType": "number",
+      "group": "metric",
+      "detectionWeight": 4,
+      "aliases": ["评论数", "评价数", "reviews", "review count", "ratings count", "number of reviews", "评论", "评价"],
+      "defaultVisible": true,
+      "renderPriority": 5
+    },
+    {
+      "key": "sales",
+      "label": "销量",
+      "valueType": "number",
+      "group": "metric",
+      "detectionWeight": 3,
+      "aliases": ["销量", "月销量", "sales", "monthly sales", "units sold", "monthly units", "月销售量", "销售量"],
+      "defaultVisible": true,
+      "renderPriority": 6
+    },
+    {
+      "key": "revenue",
+      "label": "销售额",
+      "valueType": "price",
+      "group": "metric",
+      "detectionWeight": 3,
+      "aliases": ["销售额", "营收", "revenue", "monthly revenue", "gross revenue", "月销售额", "月营收"],
+      "defaultVisible": false,
+      "renderPriority": 7
+    },
+    {
+      "key": "bsr",
+      "label": "BSR排名",
+      "valueType": "number",
+      "group": "metric",
+      "detectionWeight": 5,
+      "aliases": ["BSR", "BSR排名", "排名", "best seller rank", "best sellers rank", "rank", "category rank", "类目排名", "大类排名"],
+      "defaultVisible": true,
+      "renderPriority": 8
+    },
+    {
+      "key": "brand",
+      "label": "品牌",
+      "valueType": "string",
+      "group": "identity",
+      "detectionWeight": 4,
+      "aliases": ["品牌", "brand", "brand name", "品牌名", "品牌名称"],
+      "defaultVisible": true,
+      "renderPriority": 9
+    },
+    {
+      "key": "category",
+      "label": "类目",
+      "valueType": "string",
+      "group": "auxiliary",
+      "detectionWeight": 2,
+      "aliases": ["类目", "分类", "category", "product category", "类别", "商品分类", "产品类目"],
+      "defaultVisible": false,
+      "renderPriority": 10
+    },
+    {
+      "key": "seller",
+      "label": "卖家",
+      "valueType": "string",
+      "group": "auxiliary",
+      "detectionWeight": 1,
+      "aliases": ["卖家", "店铺", "seller", "sold by", "merchant", "卖家名称", "店铺名称"],
+      "defaultVisible": false,
+      "renderPriority": 11
+    },
+    {
+      "key": "link",
+      "label": "商品链接",
+      "valueType": "url",
+      "group": "auxiliary",
+      "detectionWeight": 2,
+      "aliases": ["链接", "商品链接", "link", "url", "product url", "product link", "listing url", "商品地址", "产品链接"],
+      "defaultVisible": false,
+      "renderPriority": 12
+    },
+    {
+      "key": "date",
+      "label": "上架日期",
+      "valueType": "string",
+      "group": "auxiliary",
+      "detectionWeight": 1,
+      "aliases": ["上架日期", "上架时间", "date", "launch date", "date first available", "首次上架", "上市日期"],
+      "defaultVisible": false,
+      "renderPriority": 13
+    }
+  ],
+  "fieldGroups": {
+    "identity": "身份字段（标题、ASIN、主图、品牌）— 用于商品识别，权重最高",
+    "commerce": "商务字段（价格）— 用于交易相关展示",
+    "metric": "指标字段（评分、评论数、销量、BSR）— 用于数据分析",
+    "auxiliary": "辅助字段（类目、卖家、链接、日期）— 补充信息"
+  },
+  "valueTypes": {
+    "string": "普通文本",
+    "number": "数值（整数或浮点数）",
+    "url": "URL 链接",
+    "image_url": "图片 URL（渲染为缩略图）",
+    "rating": "评分（0-5，支持小数）",
+    "price": "价格（带货币符号，如 $29.99）",
+    "rich_text": "富文本（支持简单 Markdown）"
+  }
+}
