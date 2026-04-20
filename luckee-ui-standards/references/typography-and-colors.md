@@ -1,5 +1,22 @@
 # Typography & Colors 字体与色彩规范
 
+## How to Apply Styles — Priority Rule
+
+Always follow this order. Only move to the next level when the current level cannot satisfy the requirement.
+
+| Level | Example | When to use |
+| --- | --- | --- |
+| 1. Semantic token class | `text-primary`, `bg-muted`, `text-foreground` | Always try this first |
+| 2. Tailwind utility class | `font-medium`, `leading-relaxed`, `rounded-xl` | Standard utilities |
+| 3. Tailwind arbitrary value | `text-[0.88rem]`, `leading-[1.55]`, `w-[420px]` | Non-standard values — **still token-governed, not inline style** |
+| 4. `style={{ ... }}` | `style={{ width: dynamicValue }}` | Runtime-computed values only |
+
+**Never use `style={{ fontSize: '...' }}` when `text-[...]` works.**
+**Never use `style={{ color: '#3D5A3E' }}` when `text-primary` works.**
+**Never pass `fontFamily` as a JS variable** — fonts are defined globally in `tailwind-luckee.css` and applied automatically.
+
+---
+
 ## Typography (字体排版)
 
 Luckee uses a dual-font system. Headings are elegant and organic, while body text is clean and legible.
@@ -23,15 +40,21 @@ Luckee uses a dual-font system. Headings are elegant and organic, while body tex
 
 ## Color Palette (色彩体系)
 
+### Source of Truth
+- The default palette families come from `figmacode/src/app/components/DesignSystemPage.tsx` `Color Palette Definition`.
+- Routine design colors in `luckee_frontend` should be selected from those families first.
+- Innovation-oriented extensions are allowed when the task truly calls for them, but they should be added intentionally rather than casually.
+- Recommended token flow: **palette primitives → semantic tokens → component tokens**.
+
 ### Core Brand Tokens
 - `--bg-primary`: `#FAF8F4` (Oat Cream 100) - Main page background.
 - `--bg-card`: `#FFFFFF` - Primary card and modal surface.
-- `--bg-input`: `#F5F3EF` - Default input background.
+- `--bg-input`: `#F5F1EA` (Oat Cream 200) - Default input background.
 - `--color-brand`: `#3D5A3E` (Forest Green 600) - Primary CTA and brand accents.
 - `--text-primary`: `#2D2D2D` (Neutral 900) - Headings and primary body text.
 - `--text-secondary`: `#888888` (Neutral 500) - Subtitles and secondary text.
-- `--text-muted`: `#BBBBBB` - Disabled text, placeholders, and subtle borders.
-- `--border-default`: `rgba(0,0,0,0.07)` - Standard subtle border.
+- `--text-muted`: `#AAAAAA` (Neutral 400) - Disabled text and placeholders.
+- `--border-default`: `#E0E0E0` (Neutral 200) - Standard subtle border.
 
 ### Shade Scales
 

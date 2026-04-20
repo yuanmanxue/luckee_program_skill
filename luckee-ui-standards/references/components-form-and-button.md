@@ -32,7 +32,7 @@ Buttons in Luckee are always fully rounded (`rounded-full`) and use organic, sof
 
 ## Form Inputs (表单输入)
 
-Inputs in Luckee are defined by a light cream background (`#F5F3EF`), subtle borders, and a distinct green focus ring. They are slightly taller and more rounded than default shadcn inputs.
+Inputs in Luckee are defined by a light cream background (`#F5F1EA` / Oat 200), subtle borders, and a distinct green focus ring. They are slightly taller and more rounded than default shadcn inputs.
 
 ### Base Input Anatomy
 
@@ -45,10 +45,10 @@ Inputs in Luckee are defined by a light cream background (`#F5F3EF`), subtle bor
 
 | State | Background | Border | Box Shadow (Ring) | Text Color |
 | --- | --- | --- | --- | --- |
-| **Default** | `#F5F3EF` | `1px solid rgba(0,0,0,0.08)` | None | `#2D2D2D` |
-| **Hover** | `#F0EDE7` | `1px solid rgba(0,0,0,0.14)` | None | `#2D2D2D` |
-| **Focus** | `#F5F3EF` | `1px solid rgba(61,90,62,0.4)` | `0 0 0 3px rgba(61,90,62,0.08)` | `#2D2D2D` |
-| **Disabled** | `#F0F0F0` | `1px solid rgba(0,0,0,0.04)` | None | `#BBBBBB` |
+| **Default** | `#F5F1EA` | `1px solid rgba(0,0,0,0.08)` | None | `#2D2D2D` |
+| **Hover** | `#EDE8DF` | `1px solid rgba(0,0,0,0.14)` | None | `#2D2D2D` |
+| **Focus** | `#F5F1EA` | `1px solid rgba(61,90,62,0.4)` | `0 0 0 3px rgba(61,90,62,0.08)` | `#2D2D2D` |
+| **Disabled** | `#F0F0F0` | `1px solid rgba(0,0,0,0.04)` | None | `#AAAAAA` |
 | **Error** | `#FEF2F2` | `1px solid rgba(220,38,38,0.35)` | `0 0 0 3px rgba(220,38,38,0.06)` | `#2D2D2D` |
 | **Success** | `#ECFDF5` | `1px solid rgba(16,185,129,0.35)` | `0 0 0 3px rgba(16,185,129,0.06)` | `#2D2D2D` |
 

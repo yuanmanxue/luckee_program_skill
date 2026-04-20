@@ -14,28 +14,38 @@ To achieve a low-cost, highly maintainable migration, we must update the root CS
 
 Since Tailwind v4 `hsl()` functions require HSL values without the `hsl()` wrapper (e.g., `120 20% 50%`), we must convert the brand HEX colors to HSL.
 
+The recommended implementation model for routine work is:
+
+1. **Palette primitives**: raw palette shades from `DesignSystemPage.tsx`
+2. **Semantic tokens**: app-wide meanings like `--primary`, `--background`, `--border`
+3. **Component tokens**: table, sidebar, dialog, toast, and other local surface tokens
+
+`@theme` is only the Tailwind bridge on top of those layers.
+
+If a task is explicitly innovation-oriented, palette extensions are allowed, but they should still enter through the same three-layer structure instead of bypassing it.
+
 ### Color Mapping Table (HEX to HSL)
 
 | Semantic Token | Design System HEX | Converted HSL Value | Tailwind Usage |
 | --- | --- | --- | --- |
-| `--background` | `#FAF8F4` (Oat Cream) | `40 25% 97%` | `bg-background` |
+| `--background` | `#FAF8F4` (Oat Cream 100) | `40 37% 97%` | `bg-background` |
 | `--foreground` | `#2D2D2D` (Neutral 900) | `0 0% 18%` | `text-foreground` |
 | `--card` | `#FFFFFF` | `0 0% 100%` | `bg-card` |
 | `--card-foreground`| `#2D2D2D` | `0 0% 18%` | `text-card-foreground`|
 | `--popover` | `#FFFFFF` | `0 0% 100%` | `bg-popover` |
 | `--popover-foreground`| `#2D2D2D` | `0 0% 18%` | `text-popover-foreground`|
 | `--primary` | `#3D5A3E` (Forest Green)| `122 19% 30%` | `bg-primary` |
-| `--primary-foreground`| `#FAF8F4` | `40 25% 97%` | `text-primary-foreground`|
-| `--secondary` | `#F5F3EF` (Input Bg) | `40 20% 95%` | `bg-secondary` |
+| `--primary-foreground`| `#FAF8F4` | `40 37% 97%` | `text-primary-foreground`|
+| `--secondary` | `#F5F1EA` (Oat Cream 200) | `38 35% 94%` | `bg-secondary` |
 | `--secondary-foreground`|`#3D5A3E` | `122 19% 30%` | `text-secondary-foreground`|
 | `--muted` | `#F0F0F0` | `0 0% 94%` | `bg-muted` |
 | `--muted-foreground`| `#888888` | `0 0% 53%` | `text-muted-foreground`|
-| `--accent` | `#D9E8DA` (Green 100) | `124 28% 88%` | `bg-accent` |
+| `--accent` | `#D9E8DA` (Forest Green 100) | `124 25% 88%` | `bg-accent` |
 | `--accent-foreground`| `#1C2B1D` (Green 900)| `124 21% 14%` | `text-accent-foreground`|
 | `--destructive` | `#DC2626` | `0 72% 51%` | `bg-destructive` |
 | `--destructive-foreground`|`#FFFFFF` | `0 0% 100%` | `text-destructive-foreground`|
-| `--border` | `rgba(0,0,0,0.07)` | `0 0% 0%` (opacity handled by TW)| `border-border` |
-| `--input` | `rgba(0,0,0,0.08)` | `0 0% 0%` | `border-input` |
+| `--border` | `#E0E0E0` (Neutral 200) | `0 0% 88%` | `border-border` |
+| `--input` | `#E0E0E0` (Neutral 200) | `0 0% 88%` | `border-input` |
 | `--ring` | `#3D5A3E` | `122 19% 30%` | `ring-ring` |
 
 ### Radius Mapping Table

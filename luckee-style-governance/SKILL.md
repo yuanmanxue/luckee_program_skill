@@ -46,9 +46,11 @@ Before making non-trivial style changes, read supporting materials in this order
 
 | Area | Rule |
 | --- | --- |
-| Migration order | Follow **audit → tokens/global theme → primitives → dialog system → inline-style cleanup → shared business UI → pages → sweep**. Do not jump straight to page restyling when the base layer is still fragmented. |
+| Migration order | Follow **audit → palette primitives → semantic theme → component tokens → primitives → dialog system → inline-style cleanup → shared business UI → pages → sweep**. Do not jump straight to page restyling when the base layer is still fragmented. |
 | Architecture | Preserve the existing Rsbuild + React + TypeScript SPA architecture, routes, stores, runtime API model, i18n, error handling, and request flow. |
+| Theme source | Treat `figmacode/src/app/components/DesignSystemPage.tsx` `Color Palette Definition` as the default palette baseline for routine visual work. |
 | Styling | Prefer semantic tokens, Tailwind utility classes, `cn()`, and `cva()`. Do not add new visual systems in parallel. |
+| New colors | Do not introduce a new hex, rgba, or Tailwind color utility directly in a component if it is meant to become part of the design language. Routine additions should come from the baseline palette. Intentional innovation extensions are allowed, but they must still enter through the palette layer first and then map forward. |
 | Inline style | Remove **visual** inline styles when they can be represented by tokens or utilities. Keep inline style only for genuine runtime numeric values such as dynamic width, height, transform, or z-index. |
 | Shared UI | If a style pattern appears repeatedly and is business-agnostic, move it toward `src/components/ui` or a minimal shared wrapper instead of duplicating classes. |
 | Scope control | Implement the smallest coherent slice. If the task is broad, split it into steps and finish one step at a time. |
@@ -84,9 +86,11 @@ Output a prioritized table before editing broad areas. P0 items are issues that 
 
 Before touching business pages, standardize the bottom of the stack.
 
-1. Apply or align the Luckee token layer.
-2. Ensure fonts, surfaces, radius, shadows, and focus rings match `luckee-ui-standards`.
-3. Update shared primitives such as button, input, card, dialog, tabs, toast, and related wrappers.
+1. Align the palette primitive layer to `DesignSystemPage.tsx` for routine work.
+2. Map palette primitives into semantic tokens such as `--background`, `--primary`, `--accent`, and `--border`.
+3. Map semantic tokens into component tokens such as table, sidebar, dialog, and toast surfaces.
+4. Ensure fonts, surfaces, radius, shadows, and focus rings match `luckee-ui-standards`.
+5. Update shared primitives such as button, input, card, dialog, tabs, toast, and related wrappers.
 
 Do not skip this stage. If the theme and primitives are wrong, every page-level adjustment becomes temporary.
 
@@ -130,6 +134,14 @@ At this stage, page work should mostly involve:
 
 Avoid solving page differences by adding one-off styles that bypass the newly standardized system.
 
+If a page seems to require a new color, stop and decide which layer it belongs to:
+
+1. Palette primitive if it is a reusable shade from the default design palette
+2. Semantic token if it represents a cross-app meaning
+3. Component token if it only belongs to one visual surface family
+
+If it does not exist in the default palette and the task is not explicitly exploratory, prefer reusing an existing color instead of inventing a new one.
+
 ## Output Requirements for Coding Agents
 
 When using this skill during a coding task, always structure the response in this order:
@@ -170,3 +182,13 @@ Prefer small commits after each stable step.
 ## Avoid These Mistakes
 
 Do not start with homepage cosmetics when the token layer is still wrong. Do not remove every inline style mechanically. Do not fork a second dialog system. Do not embed visual constants directly inside business components when a token or primitive can carry them. Do not turn a style cleanup task into a product-logic refactor.
+
+**Style priority rule (must follow in every task):**
+Always apply styles in this order. Only move to the next level when the current level cannot satisfy the requirement.
+
+1. Semantic token class — `bg-primary`, `text-foreground`, `text-muted-foreground`, `border-border` …
+2. Tailwind utility class — `rounded-xl`, `font-medium`, `leading-relaxed` …
+3. Tailwind arbitrary value — `text-[0.88rem]`, `w-[420px]`, `leading-[1.55]` … ← **this is still token-governed, not inline style**
+4. `style={{ ... }}` — last resort, only for runtime-computed values
+
+Never use `style={{ fontSize: '...' }}` when `text-[...]` works. Never use `style={{ color: '#3D5A3E' }}` when `text-primary` works. Never pass `fontFamily` as a JS variable — use the global font defined in `tailwind-luckee.css`. See `references/inline-style-policy.md` for the full conversion table.

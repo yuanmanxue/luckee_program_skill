@@ -60,7 +60,7 @@ Notifications are larger than toasts and often contain a title, description, tim
 - **Padding**: `px-5 py-4`
 - **Title**: `0.85rem`, `#2D2D2D`, weight `500`
 - **Description**: `0.78rem`, `#888888`, weight `300`, line height `1.6`
-- **Timestamp**: `0.65rem`, `#BBBBBB`, margin top `6px`
+- **Timestamp**: `0.65rem`, `#AAAAAA`, margin top `6px`
 
 ---
 
