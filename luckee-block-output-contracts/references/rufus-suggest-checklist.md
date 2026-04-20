@@ -109,9 +109,9 @@
 
 | 等级 | 含义 | 典型场景 | 前端颜色 |
 |---|---|---|---|
-| `"high"` | 影响合规性、账号安全，或可能导致 Listing 被下架 | 品牌词侵权、违禁词、类目错误 | 红色 `#DC3C3C` |
-| `"medium"` | 影响转化率或前台展示效果 | 标题关键词顺序不佳、主图描述缺失 | 橙黄色 `#D4940A` |
-| `"low"` | 优化建议，不影响核心功能 | 后台搜索词补充、Bullet Point 细化 | 绿色 `#3D5A3E` |
+| `"high"` | 影响合规性、账号安全，或可能导致 Listing 被下架 | 品牌词侵权、违禁词、类目错误 | 红色 `#ba1c1c` |
+| `"medium"` | 影响转化率或前台展示效果 | 标题关键词顺序不佳、主图描述缺失 | 橙黄色 `#fbbd23` |
+| `"low"` | 优化建议，不影响核心功能 | 后台搜索词补充、Bullet Point 细化 | 绿色 `#047756` |
 
 **判定原则**：
 - 不确定等级时，默认使用 `"low"`
@@ -249,3 +249,108 @@
 | 字段差异化渲染 | 新增可选字段 `fieldType?: string`，定义字段类型枚举 |
 | 操作结果回传后端 | 引入 `useBlockActionStore`，通过 WebSocket 回传 `result` |
 | 批量操作增强 | 全选/按 risk 筛选/拖拽排序 |
+
+---
+
+## 11. Examples
+
+### GOOD：完整的多字段建议清单
+
+场景：Rufus 分析完 Listing，发现标题（medium）、违禁词（high）、搜索词（low）三处问题。
+
+```json
+{
+  "content": "分析完成，发现 3 处可优化项，已按风险等级排序：",
+  "metadata": {
+    "structured_blocks": [
+      {
+        "type": "rufus_suggest_checklist",
+        "version": "1.0",
+        "source": "llm_output",
+        "title": "Rufus 建议修改清单",
+        "description": "以下建议已按字段整理，你可以先筛掉不想动的项，再确认本次修改范围。",
+        "items": [
+          {
+            "id": "1",
+            "field": "标题",
+            "risk": "high",
+            "description": "标题中包含 Amazon 平台违禁词 'best'，可能导致 Listing 被下架。",
+            "warning": "违禁词问题会直接影响 Listing 状态，建议立即修改。",
+            "currentContent": "Best Wireless Earbuds for Sports",
+            "suggestedContent": "Top-Rated Wireless Earbuds for Sports"
+          },
+          {
+            "id": "2",
+            "field": "Bullet Point 1",
+            "risk": "medium",
+            "description": "卖点表达过泛，缺少数字锚点和使用场景，无法快速建立购买理由。",
+            "currentContent": "Long battery life and comfortable fit for everyday listening.",
+            "suggestedContent": "Up to 48 hours of battery life with compact charging case, ideal for commuting, workouts and long trips."
+          },
+          {
+            "id": "3",
+            "field": "Search Terms",
+            "risk": "low",
+            "description": "后台词重复度高，缺少更强购买意图的变体词。",
+            "currentContent": "wireless earbuds bluetooth headphones sport earphones",
+            "suggestedContent": "noise cancelling earbuds workout headphones long battery earphones commute travel gym"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**为什么正确**：
+- `type` / `version` / `source` 三个必填字段完整
+- items 按 risk 从高到低排序（high → medium → low）
+- `risk` 全部用英文枚举值
+- `id` 是字符串
+- 所有字段名 camelCase
+- `warning` 仅在需要时出现（第 2、3 条省略）
+- `suggestedContent` 均有实质内容
+
+---
+
+### BAD：7 个典型错误
+
+```json
+{
+  "metadata": {
+    "structured_blocks": [
+      {
+        "type": "rufus_checklist",
+        "items": [
+          {
+            "id": 1,
+            "field": "标题",
+            "risk": "高风险",
+            "description": "标题需要修改",
+            "current_content": "Best Wireless Earbuds",
+            "suggested_content": ""
+          },
+          {
+            "id": 2,
+            "field": "图片",
+            "risk": "low",
+            "description": "主图背景不符合规范。",
+            "currentContent": "白底图",
+            "suggestedContent": "纯白背景，商品占图片面积 85% 以上"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+| # | 错误位置 | 错误内容 | 正确写法 |
+|---|---|---|---|
+| 1 | `type` | `"rufus_checklist"` 拼写错误 | `"rufus_suggest_checklist"` |
+| 2 | 顶层 | 缺少 `version` 和 `source` | 必须有 `"1.0"` 和 `"llm_output"` |
+| 3 | item[0].id | `1` 是数字 | `"1"` 字符串 |
+| 4 | item[0].risk | `"高风险"` 中文枚举 | `"high"` |
+| 5 | item[0].description | `"标题需要修改"` 过于笼统 | 说明具体原因，如"包含违禁词 'best'" |
+| 6 | item[0] | `current_content` snake_case | `currentContent` |
+| 7 | item[0].suggestedContent | `""` 空字符串 | 必须有实质内容 |

@@ -261,6 +261,10 @@ version: 1.0
 
 ---
 
+**每种 block 的完整 Examples（含更多场景）在对应的 references 文件中。新增 block 时，Examples 写在该 block 的 references 文件里，不需要改 SKILL.md。**
+
+---
+
 ## Fallback Behavior
 
 前端有三级防御，但你的目标是**永远不触发 FallbackRenderer**：
@@ -278,4 +282,4 @@ version: 1.0
 
 ## Dependency Declaration
 
-本 Skill 被其他业务 Skill 依赖。当业务 Skill（如 `listing-sandbox-analyzer`、`rufus-listing-optimizer` 等）需要输出结构化 Block 时，**必须调用本 Skill 生成 Block，不可自行构造 JSON。**
+本 Skill 是 Block 输出的基础契约层，供所有业务 Skill 依赖。任何需要输出结构化 Block 的 Skill，都必须调用本 Skill，不可自行构造 JSON。调用方在自己的 SKILL.md 中声明依赖即可，无需在本文件中注册。
