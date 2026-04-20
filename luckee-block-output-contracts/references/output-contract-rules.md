@@ -187,3 +187,17 @@ Block JSON 应放在消息的 `metadata.structured_blocks` 数组中：
 
 - minor 版本变更（如 `1.0` → `1.1`）：新增可选字段，旧格式仍然有效
 - major 版本变更（如 `1.x` → `2.0`）：有 breaking change，需要按新规范输出
+
+---
+
+## 8. 扩展方式
+
+新增 block type 时的标准流程：
+
+1. 在 `src/lib/blocks/types.ts` 中定义新的 TypeScript interface
+2. 在 `src/lib/blocks/guards.ts` 中新增类型守卫函数
+3. 在 `src/components/blocks/` 中实现 Renderer 组件
+4. 在 `src/components/blocks/index.ts` 中注册 renderer
+5. 在本 Skill 的 `references/` 目录下新增对应的规范文件
+6. 在 `SKILL.md` 的 Block Registry 表格中补充条目
+7. 在 `SKILL.md` 的 JiT References 表格中补充读取指令
