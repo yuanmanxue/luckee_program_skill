@@ -38,9 +38,8 @@
 
 ## 2. 完整输出格式
 
-> 字段结构定义详见 `schemas/rufus-suggest-checklist/block.schema.json`
-> 交互动作定义详见 `schemas/rufus-suggest-checklist/action.schema.json`
-> 完整输出示例详见 `schemas/rufus-suggest-checklist/example.output.json`
+> 字段约束速查 `schemas/rufus-suggest-checklist/block.schema.json`
+> 可直接复制的完整示例 `schemas/rufus-suggest-checklist/example.output.json`
 
 ```json
 {
@@ -91,9 +90,9 @@
 | `type` | string | **是** | 固定值 `"rufus_suggest_checklist"` | 不可更改 |
 | `version` | string | **是** | 固定值 `"1.0"` | 不可更改 |
 | `source` | string | **是** | 固定值 `"llm_output"` | 不可更改 |
-| `title` | string | 否 | 不超过 30 字 | 默认显示"Rufus 建议修改清单" |
-| `description` | string | 否 | 不超过 100 字 | 对清单的整体说明 |
-| `items` | array | **是** | 至少 1 条，建议不超过 10 条 | 建议项列表 |
+| `title` | string | 否 | — | 默认显示"Rufus 建议修改清单" |
+| `description` | string | 否 | — | 对清单的整体说明 |
+| `items` | array | **是** | 至少 1 条 | 建议项列表 |
 
 ### 3.2 items 数组中每条建议的字段
 
@@ -189,7 +188,7 @@
 | 无法确定 risk 等级 | 默认使用 `"low"` |
 | 某字段没有当前内容（新增场景） | `currentContent` 设为空字符串 `""` |
 | 建议项为 0 条 | **不输出此 block**，改用 markdown 文本说明 |
-| 建议项超过 10 条 | 按 risk 优先级排序（high → medium → low），保留前 10 条，其余用 markdown 文本概述 |
+| 建议项较多 | 按 risk 优先级排序（high → medium → low），具体上限由业务侧定义 |
 | 同一字段有多条建议 | 合并为一条，在 description 中分点说明 |
 | 建议内容与当前内容完全相同 | 不输出该条 item |
 | LLM 不确定建议是否合适 | 在 `warning` 字段中说明不确定性，仍然输出该条 item |
@@ -243,34 +242,7 @@
 
 ---
 
-## 10. 交互协议
-
-本 Block 为 **blocking** 模式：用户点击确认/跳过后，前端同时发送 `answer_message`（记录操作日志）和 `query`（触发 LLM 新一轮对话）。
-
-> 交互动作定义详见 `schemas/rufus-suggest-checklist/action.schema.json`
-
-### 10.1 WSS 消息流
-
-```
-用户点击「确认修改」
-   ├── ① answer_message (type: "answer_message")
-   │     answers: { "Rufus 建议修改清单 2 项": "确认修改" }
-   │     questions: [ { ...原始 questions, answer_key, answer_value, answered_at } ]
-   └── ② query (type: "query")
-         content: "Rufus 建议修改清单 2 项: 确认修改"
-```
-
-### 10.2 历史状态恢复
-
-历史加载时后端返回两条 `ask_message`：
-1. 第一条：原始 `questions`（含 `block_data`）
-2. 第二条：enriched `questions`（含 `answer_key` + `answer_value`）
-
-前端通过 `answer_key` / `answer_value` 自动恢复"已确认/已跳过"状态。
-
----
-
-## 11. 未来扩展（预留）
+## 10. 未来扩展（预留）
 
 以下功能当前不支持，但 schema 设计已预留扩展空间：
 

@@ -1,25 +1,20 @@
 {
-  "$schema": "block-schema/v1",
-  "type": "rufus_suggest_checklist",
-  "version": "1.0",
-  "description": "逐条修改建议清单，用户可勾选确认或整体跳过",
+  "_comment": "rufus_suggest_checklist — 字段约束速查（详情见 references/rufus-suggest-checklist.md §3）",
 
-  "topLevel": {
-    "type":        { "type": "string",  "required": true,  "fixed": "rufus_suggest_checklist" },
-    "version":     { "type": "string",  "required": true,  "fixed": "1.0" },
-    "source":      { "type": "string",  "required": true,  "fixed": "llm_output" },
-    "title":       { "type": "string",  "required": false, "maxLength": 30, "default": "Rufus 建议修改清单" },
-    "description": { "type": "string",  "required": false, "maxLength": 100 },
-    "items":       { "type": "array",   "required": true,  "minItems": 1, "maxItems": 10, "itemSchema": "$itemSchema" }
-  },
+  "type":        "rufus_suggest_checklist（固定值）",
+  "version":     "1.0（固定值）",
+  "source":      "llm_output（固定值）",
+  "title":       "string（可选）",
+  "description": "string（可选）",
+  "items":       "array（必填，至少 1 条）",
 
-  "itemSchema": {
-    "id":               { "type": "string",  "required": true,  "note": "从 '1' 开始递增，必须是字符串" },
-    "field":            { "type": "string",  "required": true,  "note": "被修改的字段名称" },
-    "risk":             { "type": "enum",    "required": true,  "values": ["high", "medium", "low"], "note": "必须英文" },
-    "description":      { "type": "string",  "required": true,  "note": "1-2 句话，说明为什么需要修改" },
-    "warning":          { "type": "string",  "required": false, "note": "风险提示，仅在需要时出现" },
-    "currentContent":   { "type": "string",  "required": true,  "note": "可为空字符串（新增场景）" },
-    "suggestedContent": { "type": "string",  "required": true,  "note": "不可为空，必须是可直接使用的内容" }
+  "item_fields": {
+    "id":               "string（必填，从 '1' 递增）",
+    "field":            "string（必填）",
+    "risk":             "enum: 'high' | 'medium' | 'low'（必填，英文）",
+    "description":      "string（必填）",
+    "warning":          "string（可选）",
+    "currentContent":   "string（必填，可为空字符串）",
+    "suggestedContent": "string（必填，不可为空）"
   }
 }

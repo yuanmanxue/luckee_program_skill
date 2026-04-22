@@ -190,29 +190,12 @@ Block JSON 应放在消息的 `metadata.structured_blocks` 数组中：
 
 ---
 
-## 8. 扩展方式
+## 8. 新增 Block type 时的 Skill 规范步骤
 
+新增 block type 后，需要同步更新本 Skill 的规范文件，确保 LLM 能正确输出新 block：
 
-### 8.1 新增只读 Block
+1. 在 `schemas/<block-type>/` 下创建 `block.schema.json`（字段约束）+ `example.output.json`（完整示例）
+2. 在 `references/` 下新增对应的规范 `.md` 文件（字段表 + 示例 + 禁止行为）
+3. 在 `SKILL.md` 的 Block Registry 和 JiT References 表格中补充条目
 
-1. 在 `src/lib/blocks/types.ts` 中定义新的 TypeScript interface
-2. 在 `src/lib/blocks/guards.ts` 中新增类型守卫函数
-3. 在 `src/components/blocks/` 中实现 Renderer 组件
-4. 在 `src/components/blocks/index.ts` 中注册 renderer
-5. 在 `schemas/<block-type>/` 下创建 `block.schema.json` + `example.output.json`
-6. 在 `references/` 下新增对应的规范 `.md` 文件
-7. 在 `SKILL.md` 的 Block Registry 和 JiT References 表格中补充条目
-
-### 8.2 新增交互 Block（在 8.1 基础上额外完成）
-
-8. 在 `src/lib/blocks/action-protocol.ts` 中定义 Action 类型
-9. 在 `src/lib/blocks/action-serializers.ts` 中注册 serializer + enricher
-10. 在 `schemas/<block-type>/` 下创建 `action.schema.json`
-11. 组件使用 `useBlockAction()` dispatch，传入 `messageId`
-12. 组件使用 `answer` prop 判断"已回答"状态（不用 `useState`）
-
-**不需要修改的核心文件：**
-- `Chat/index.tsx` — `handleBlockAction` 自动分流
-- `useMessageProcessor.ts` — 通过标准字段 `answer_key`/`answer_value` 自动恢复
-- `BlockView.tsx` — 自动查找 renderer
-- `BlockActionContext.tsx` — 纯 context
+> 前端组件开发流程见 `docs/Interactive Block 组件开发指南.md`，不在本 Skill 范围内。
