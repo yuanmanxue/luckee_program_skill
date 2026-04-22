@@ -1,0 +1,25 @@
+{
+  "$schema": "block-schema/v1",
+  "type": "rufus_suggest_checklist",
+  "version": "1.0",
+  "description": "逐条修改建议清单，用户可勾选确认或整体跳过",
+
+  "topLevel": {
+    "type":        { "type": "string",  "required": true,  "fixed": "rufus_suggest_checklist" },
+    "version":     { "type": "string",  "required": true,  "fixed": "1.0" },
+    "source":      { "type": "string",  "required": true,  "fixed": "llm_output" },
+    "title":       { "type": "string",  "required": false, "maxLength": 30, "default": "Rufus 建议修改清单" },
+    "description": { "type": "string",  "required": false, "maxLength": 100 },
+    "items":       { "type": "array",   "required": true,  "minItems": 1, "maxItems": 10, "itemSchema": "$itemSchema" }
+  },
+
+  "itemSchema": {
+    "id":               { "type": "string",  "required": true,  "note": "从 '1' 开始递增，必须是字符串" },
+    "field":            { "type": "string",  "required": true,  "note": "被修改的字段名称" },
+    "risk":             { "type": "enum",    "required": true,  "values": ["high", "medium", "low"], "note": "必须英文" },
+    "description":      { "type": "string",  "required": true,  "note": "1-2 句话，说明为什么需要修改" },
+    "warning":          { "type": "string",  "required": false, "note": "风险提示，仅在需要时出现" },
+    "currentContent":   { "type": "string",  "required": true,  "note": "可为空字符串（新增场景）" },
+    "suggestedContent": { "type": "string",  "required": true,  "note": "不可为空，必须是可直接使用的内容" }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "content": "分析完成，发现 2 处可优化项：",
+  "metadata": {
+    "structured_blocks": [
+      {
+        "type": "rufus_suggest_checklist",
+        "version": "1.0",
+        "source": "llm_output",
+        "title": "Rufus 建议修改清单",
+        "description": "以下建议已按字段整理，确认后将自动应用。",
+        "items": [
+          {
+            "id": "1",
+            "field": "标题",
+            "risk": "medium",
+            "description": "核心成交词靠后，前半段缺少高意图词。",
+            "warning": "会直接影响前台标题展示。",
+            "currentContent": "Wireless Earbuds Bluetooth Headphones for Sports",
+            "suggestedContent": "Wireless Earbuds with Noise Cancelling, 48H Battery for Gym"
+          },
+          {
+            "id": "2",
+            "field": "Search Terms",
+            "risk": "low",
+            "description": "后台词重复度高，缺少购买意图变体词。",
+            "currentContent": "wireless earbuds bluetooth headphones",
+            "suggestedContent": "noise cancelling earbuds workout headphones long battery"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "block-action/v1",
+  "blockType": "rufus_suggest_checklist",
+  "interactionMode": "blocking",
+  "description": "用户确认或跳过 Rufus 修改建议",
+
+  "actions": {
+    "confirm": {
+      "description": "用户确认选中的修改项",
+      "payload": {
+        "selectedIds": { "type": "string[]", "required": true, "note": "用户勾选的 item id 列表" },
+        "total":       { "type": "number",   "required": true, "note": "items 总数" },
+        "answerKey":   { "type": "string",   "required": true, "note": "i18n: checklistTitle" },
+        "answerValue": { "type": "string",   "required": true, "note": "i18n: checklistConfirm" }
+      }
+    },
+    "skip": {
+      "description": "用户跳过本次修改建议",
+      "payload": {
+        "selectedIds": { "type": "string[]", "required": true, "fixed": "[]" },
+        "total":       { "type": "number",   "required": true },
+        "answerKey":   { "type": "string",   "required": true, "note": "i18n: checklistTitle" },
+        "answerValue": { "type": "string",   "required": true, "note": "i18n: checklistSkip" }
+      }
+    }
+  },
+
+  "serializers": {
+    "query": "answerKey + ': ' + answerValue",
+    "answer": "{ [answerKey]: answerValue }",
+    "questionEnricher": {
+      "standardFields": ["answer_key", "answer_value", "answered_at"],
+      "privateFields": ["user_action", "selected_ids", "total"]
+    }
+  },
+
+  "wssFlow": {
+    "blocking": {
+      "step1": "answer_message — 记录操作到历史（含 enriched questions）",
+      "step2": "query — 触发 LLM 新一轮对话"
+    }
+  }
+}

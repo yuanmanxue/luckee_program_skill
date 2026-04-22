@@ -38,6 +38,10 @@
 
 ## 2. 完整输出格式
 
+> 字段结构定义详见 `schemas/rufus-suggest-checklist/block.schema.json`
+> 交互动作定义详见 `schemas/rufus-suggest-checklist/action.schema.json`
+> 完整输出示例详见 `schemas/rufus-suggest-checklist/example.output.json`
+
 ```json
 {
   "type": "rufus_suggest_checklist",
@@ -239,7 +243,34 @@
 
 ---
 
-## 10. 未来扩展（预留）
+## 10. 交互协议
+
+本 Block 为 **blocking** 模式：用户点击确认/跳过后，前端同时发送 `answer_message`（记录操作日志）和 `query`（触发 LLM 新一轮对话）。
+
+> 交互动作定义详见 `schemas/rufus-suggest-checklist/action.schema.json`
+
+### 10.1 WSS 消息流
+
+```
+用户点击「确认修改」
+   ├── ① answer_message (type: "answer_message")
+   │     answers: { "Rufus 建议修改清单 2 项": "确认修改" }
+   │     questions: [ { ...原始 questions, answer_key, answer_value, answered_at } ]
+   └── ② query (type: "query")
+         content: "Rufus 建议修改清单 2 项: 确认修改"
+```
+
+### 10.2 历史状态恢复
+
+历史加载时后端返回两条 `ask_message`：
+1. 第一条：原始 `questions`（含 `block_data`）
+2. 第二条：enriched `questions`（含 `answer_key` + `answer_value`）
+
+前端通过 `answer_key` / `answer_value` 自动恢复"已确认/已跳过"状态。
+
+---
+
+## 11. 未来扩展（预留）
 
 以下功能当前不支持，但 schema 设计已预留扩展空间：
 
@@ -247,7 +278,6 @@
 |---|---|
 | 流式追加 items | 新增可选字段 `streaming?: boolean`，Renderer 显示加载态 |
 | 字段差异化渲染 | 新增可选字段 `fieldType?: string`，定义字段类型枚举 |
-| 操作结果回传后端 | 引入 `useBlockActionStore`，通过 WebSocket 回传 `result` |
 | 批量操作增强 | 全选/按 risk 筛选/拖拽排序 |
 
 ---

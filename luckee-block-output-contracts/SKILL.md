@@ -22,6 +22,28 @@ version: 1.0
 
 ---
 
+## 目录结构
+
+```
+luckee-block-output-contracts/
+├── SKILL.md
+├── sync-to-motse.sh
+├── references/
+│   ├── output-contract-rules.md       # 通用规则（所有 block）
+│   ├── block-schema-overview.md       # Block Schema 概览
+│   ├── field-registry.json            # 字段注册表
+│   └── rufus-suggest-checklist.md     # Rufus checklist 规范
+└── schemas/
+    └── rufus-suggest-checklist/
+        ├── block.schema.json          # Block 数据结构定义
+        ├── action.schema.json         # 交互动作定义
+        └── example.output.json        # LLM 输出示例
+```
+
+> 新增 block 时，在 `schemas/` 下建立同名文件夹存放 JSON 定义，在 `references/` 下新增规范 .md。
+
+---
+
 ## Prohibited
 
 1. 不要直接输出 markdown 表格代替 `product_grid` — 必须用 Block
@@ -180,6 +202,8 @@ version: 1.0
 - → **现在立刻读取** `references/output-contract-rules.md` — 当你需要输出任何 block 时
 - → **现在立刻读取** `references/field-registry.json` — 当你需要输出 `product_grid` 或理解字段体系时
 - → **现在立刻读取** `references/block-schema-overview.md` — 当你不确定选哪种 block type 时
+- → **现在立刻读取** `schemas/<block-type>/block.schema.json` — 当你需要查看某个 block 的字段定义时
+- → **现在立刻读取** `schemas/<block-type>/action.schema.json` — 当你需要查看某个交互 block 的动作定义时
 
 ---
 

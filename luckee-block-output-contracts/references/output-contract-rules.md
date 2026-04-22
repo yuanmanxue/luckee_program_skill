@@ -192,12 +192,27 @@ Block JSON 应放在消息的 `metadata.structured_blocks` 数组中：
 
 ## 8. 扩展方式
 
-新增 block type 时的标准流程：
+
+### 8.1 新增只读 Block
 
 1. 在 `src/lib/blocks/types.ts` 中定义新的 TypeScript interface
 2. 在 `src/lib/blocks/guards.ts` 中新增类型守卫函数
 3. 在 `src/components/blocks/` 中实现 Renderer 组件
 4. 在 `src/components/blocks/index.ts` 中注册 renderer
-5. 在本 Skill 的 `references/` 目录下新增对应的规范文件
-6. 在 `SKILL.md` 的 Block Registry 表格中补充条目
-7. 在 `SKILL.md` 的 JiT References 表格中补充读取指令
+5. 在 `schemas/<block-type>/` 下创建 `block.schema.json` + `example.output.json`
+6. 在 `references/` 下新增对应的规范 `.md` 文件
+7. 在 `SKILL.md` 的 Block Registry 和 JiT References 表格中补充条目
+
+### 8.2 新增交互 Block（在 8.1 基础上额外完成）
+
+8. 在 `src/lib/blocks/action-protocol.ts` 中定义 Action 类型
+9. 在 `src/lib/blocks/action-serializers.ts` 中注册 serializer + enricher
+10. 在 `schemas/<block-type>/` 下创建 `action.schema.json`
+11. 组件使用 `useBlockAction()` dispatch，传入 `messageId`
+12. 组件使用 `answer` prop 判断"已回答"状态（不用 `useState`）
+
+**不需要修改的核心文件：**
+- `Chat/index.tsx` — `handleBlockAction` 自动分流
+- `useMessageProcessor.ts` — 通过标准字段 `answer_key`/`answer_value` 自动恢复
+- `BlockView.tsx` — 自动查找 renderer
+- `BlockActionContext.tsx` — 纯 context
